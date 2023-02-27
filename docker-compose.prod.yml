@@ -10,7 +10,7 @@ services:
       - "8000:8000"
       - "6666:6666"
     env_file:
-      - .env
+      - .env.prod
     volumes:
       - .:/code
     depends_on:

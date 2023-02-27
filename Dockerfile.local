@@ -1,0 +1,22 @@
+FROM python:3.11.1-slim-bullseye
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+WORKDIR /code
+
+COPY Pipfile Pipfile.lock /code/
+
+# Install psycopg2 dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        gcc \
+        python3-dev \
+        libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install system dependencies
+RUN pip install pipenv --upgrade && pipenv install --dev --system --deploy --ignore-pipfile
+
+
+CMD ["./scripts/local/entrypoint.sh"]

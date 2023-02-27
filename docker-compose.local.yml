@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  web:
+    # Temporary fix when building from Apple Silicon
+    platform: linux/x86_64
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    command: python -m debugpy --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+      - "5678:5678"
+    env_file:
+      - .env.local
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+      - db
+    links:
+      - redis
+      - db
+
+  redis:
+    image: redis:latest
+
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/db:/var/lib/postgresql/data/
+
+volumes:
+  db_data:

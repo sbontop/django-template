@@ -5,10 +5,10 @@ from . import views
 
 # Add funtion based view URLs here
 urlpatterns = [
-    path("hello/", views.hello),
+    path("myfunctionbasedview/", views.myfunctionbasedview, name="myfunctionbasedview"),
 ]
 
 # Add class based view URLs here
 router = routers.SimpleRouter()
-router.register("myapp", views.MyModelViewSet, basename="myapp")
+router.register("mymodelviewset", views.MyModelViewSet, basename="mymodelviewset")
 urlpatterns += router.urls

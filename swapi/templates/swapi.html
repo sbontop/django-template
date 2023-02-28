@@ -1,0 +1,25 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Birth Year</th>
+        <th>Gender</th>
+        <th>Homeworld</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody id="table-body">
+      {% for character in characters %}
+      <tr>
+        <td>{{ character.name }}</td>
+        <td>{{ character.birth_year }}</td>
+        <td>{{ character.gender }}</td>
+        <td>{{ character.homeworld }}</td>
+        <td>{{ character.date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+  <button id="load-more-btn" class="btn btn-primary">Load more</button>
+  

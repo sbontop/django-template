@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import SwapiModel
+from .models import Person
 
-admin.site.register(SwapiModel)
-
+admin.site.register(Person)

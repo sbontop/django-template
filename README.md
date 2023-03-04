@@ -1,2 +1,1 @@
 # django-template
-# adverity-test

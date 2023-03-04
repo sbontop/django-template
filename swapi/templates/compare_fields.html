@@ -64,8 +64,8 @@
                     }
                     table.append($('<thead>').append(headerRow));
 
-                    // Add table rows
-                    $(data['rows']).each(function () {
+                    // Add table data
+                    $(data['data']).each(function () {
                         var row = $('<tr>');
                         var rowObj = this;
                         console.log(rowObj)

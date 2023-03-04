@@ -5,14 +5,19 @@ from django.core.paginator import Paginator
 from django.http import HttpResponseServerError, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.views import View
 
 from .models import Dataset
 from .util.data_downloader import DataDownloader
 from .util.data_preview import DataPreview
 
 
-def download_data_view(request):
-    if request.method == "POST":
+class DownloadDataView(View):
+    def get(self, request):
+        datasets = Dataset.objects.all()
+        return render(request, "index.html", {"datasets": datasets})
+
+    def post(self, request):
         try:
             downloader = DataDownloader(os.getenv("SWAPI_BASE_URL"))
             downloader.download_data()
@@ -23,66 +28,73 @@ def download_data_view(request):
 
         return redirect(reverse("download_data"))
 
-    datasets = Dataset.objects.all()
-    return render(request, "index.html", {"datasets": datasets})
+
+class PreviewDatasetView(View):
+    def get(self, request, *args, **kwargs):
+        # Load CSV data
+        filename = kwargs.get("filename")
+        file_path = f"swapi/{filename}"
+        rows = DataPreview(file_path).load_csv_data()
+
+        # Set up paginator
+        paginator = Paginator(rows, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        return render(
+            request, "csv.html", {"page_obj": page_obj, "csv_file": file_path}
+        )
 
 
-def preview_dataset(request, *args, **kwargs):
-    # Load CSV data
-    filename = kwargs.get("filename")
-    file_path = f"swapi/{filename}"
-    rows = DataPreview(file_path).load_csv_data()
+class CompareFieldsView(View):
+    def get(self, request, *args, **kwargs):
+        # Load CSV data
+        filename = kwargs.get("filename")
+        file_path = f"swapi/{filename}"
+        rows = DataPreview(file_path).load_csv_data()
 
-    # Set up paginator
-    paginator = Paginator(rows, 10)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, "csv.html", {"page_obj": page_obj, "csv_file": file_path})
-
-
-def compare_fields(request, *args, **kwargs):
-    # Load CSV data
-    filename = kwargs.get("filename")
-    file_path = f"swapi/{filename}"
-    rows = DataPreview(file_path).load_csv_data()
-
-    if request.method != "POST":
         return render(
             request, "compare_fields.html", {"rows": rows, "filename": filename}
         )
 
-    selected_columns = request.POST.get("selected_columns")
-    selected_columns = selected_columns.split(",") if selected_columns else []
+    def post(self, request, *args, **kwargs):
+        # Load CSV data
+        filename = kwargs.get("filename")
+        file_path = f"swapi/{filename}"
+        rows = DataPreview(file_path).load_csv_data()
 
-    # Filter rows to selected columns
-    filtered_rows = []
-    for row in rows:
-        filtered_row = {column: row[column] for column in selected_columns}
-        filtered_rows.append(filtered_row)
+        selected_columns = request.POST.get("selected_columns")
+        selected_columns = selected_columns.split(",") if selected_columns else []
 
-    # Count occurrences of values for selected columns
-    value_counts = {}
-    for row in filtered_rows:
-        key = tuple(row.values())
-        value_counts[key] = value_counts.get(key, 0) + 1
+        # Filter rows to selected columns
+        filtered_rows = []
+        for row in rows:
+            filtered_row = {column: row[column] for column in selected_columns}
+            filtered_rows.append(filtered_row)
 
-    # Create table rows with value counts
-    table_rows = []
-    for key, count in value_counts.items():
-        row_dict = {column: key[i] for i, column in enumerate(selected_columns)}
-        row_dict["count"] = count
-        table_rows.append(row_dict)
+        # Count occurrences of values for selected columns
+        value_counts = {}
+        for row in filtered_rows:
+            key = tuple(row.values())
+            value_counts[key] = value_counts.get(key, 0) + 1
 
-    # Sort table rows by count in descending order
-    table_rows = sorted(table_rows, key=lambda row: row["count"], reverse=True)
+        # Create table rows with value counts
+        table_rows = []
+        for key, count in value_counts.items():
+            row_dict = {column: key[i] for i, column in enumerate(selected_columns)}
+            row_dict["count"] = count
+            table_rows.append(row_dict)
 
-    return JsonResponse({"rows": table_rows, "filename": filename})
+        # Sort table rows by count in descending order
+        table_rows = sorted(table_rows, key=lambda row: row["count"], reverse=True)
+
+        return JsonResponse({"rows": table_rows, "filename": filename})
 
 
-def get_column_options(request, *args, **kwargs):
-    # Load CSV data
-    filename = kwargs.get("filename")
-    file_path = f"swapi/{filename}"
-    rows = DataPreview(file_path).load_csv_data()
-    return JsonResponse({"columns": list(rows[0].keys())})
+class GetColumnOptionsView(View):
+    def get(self, request, *args, **kwargs):
+        # Load CSV data
+        filename = kwargs.get("filename")
+        file_path = f"swapi/{filename}"
+        rows = DataPreview(file_path).load_csv_data()
+        return JsonResponse({"columns": list(rows[0].keys())})

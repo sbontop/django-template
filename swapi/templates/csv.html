@@ -1,59 +1,101 @@
-
 {% block content %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Height</th>
-        <th>Mass</th>
-        <th>Hair Color</th>
-        <th>Skin Color</th>
-        <th>Eye Color</th>
-        <th>Birth Year</th>
-        <th>Gender</th>
-        <th>Homeworld</th>
-        <th>Films</th>
-        <th>Species</th>
-        <th>Vehicles</th>
-        <th>Starships</th>
-        <th>Created</th>
-        <th>Edited</th>
-        <th>URL</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for row in page_obj %}
-        <tr>
-          <td>{{ row.name }}</td>
-          <td>{{ row.height }}</td>
-          <td>{{ row.mass }}</td>
-          <td>{{ row.hair_color }}</td>
-          <td>{{ row.skin_color }}</td>
-          <td>{{ row.eye_color }}</td>
-          <td>{{ row.birth_year }}</td>
-          <td>{{ row.gender }}</td>
-          <td>{{ row.homeworld }}</td>
-          <td>{{ row.films }}</td>
-          <td>{{ row.species }}</td>
-          <td>{{ row.vehicles }}</td>
-          <td>{{ row.starships }}</td>
-          <td>{{ row.created }}</td>
-          <td>{{ row.edited }}</td>
-          <td>{{ row.url }}</td>
-          <td>{{ row.date }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% if page_obj.has_other_pages %}
-    <div class="pagination">
-      {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}">&laquo; Previous</a>
-      {% endif %}
-      {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
-      {% endif %}
-    </div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Height</th>
+      <th>Mass</th>
+      <th>Hair Color</th>
+      <th>Skin Color</th>
+      <th>Eye Color</th>
+      <th>Birth Year</th>
+      <th>Gender</th>
+      <th>Homeworld</th>
+      <th>Films</th>
+      <th>Species</th>
+      <th>Vehicles</th>
+      <th>Starships</th>
+      <th>Created</th>
+      <th>Edited</th>
+      <th>URL</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in page_obj %}
+    <tr>
+      <td>{{ row.name }}</td>
+      <td>{{ row.height }}</td>
+      <td>{{ row.mass }}</td>
+      <td>{{ row.hair_color }}</td>
+      <td>{{ row.skin_color }}</td>
+      <td>{{ row.eye_color }}</td>
+      <td>{{ row.birth_year }}</td>
+      <td>{{ row.gender }}</td>
+      <td>{{ row.homeworld }}</td>
+      <td>{{ row.films }}</td>
+      <td>{{ row.species }}</td>
+      <td>{{ row.vehicles }}</td>
+      <td>{{ row.starships }}</td>
+      <td>{{ row.created }}</td>
+      <td>{{ row.edited }}</td>
+      <td>{{ row.url }}</td>
+      <td>{{ row.date }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% if page_obj.has_other_pages %}
+<div class="pagination">
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}">&laquo; Previous</a>
   {% endif %}
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
+  {% endif %}
+</div>
+{% endif %}
 {% endblock %}
+
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .pagination a {
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+  }
+
+  .pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+  }
+
+  .pagination a:hover:not(.active) {
+    background-color: #ddd;
+  }
+</style>

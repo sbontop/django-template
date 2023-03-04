@@ -25,11 +25,6 @@ local:
 	docker-compose -f docker-compose.local.yml down; \
 	docker-compose -f docker-compose.local.yml up
 
-.PHONY: restart-local
-restart-local:
-	@echo "Restarting local environment..."
-	docker-compose -f docker-compose.local.yml restart web; \
-
 .PHONY: dev
 dev:
 	@echo "Starting development environment..."
@@ -93,8 +88,3 @@ test-prod:
 migrate-local:
 	@echo "Running Django migrations within Django docker local container..."
 	docker-compose -f docker-compose.local.yml run web python manage.py migrate
-
-.PHONY: access-local
-access-local:
-	@echo "Accessing Django docker local container..."
-	docker-compose -f docker-compose.local.yml run web bash

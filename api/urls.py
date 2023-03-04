@@ -57,5 +57,4 @@ urlpatterns = [
         name="redoc",
     ),
     path("myapp/", include("myapp.urls")),
-    path("swapi/", include("swapi.urls")),
 ]

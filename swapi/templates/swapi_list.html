@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>SWAPI Data</h1>
+  <ul>
+    {% for swapi_data in object_list %}
+      <li><a href="/media/{{ swapi_data.filename }}">{{ swapi_data.filename }}</a></li>
+    {% empty %}
+      <li>No SWAPI data has been downloaded yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Download SWAPI Data</title>
+  </head>
+  <body>
+    <form method="POST">
+      {% csrf_token %}
+      <button type="submit">Download Latest SWAPI Data</button>
+    </form>
+  </body>
+</html>

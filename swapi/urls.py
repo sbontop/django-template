@@ -1,27 +1,19 @@
 from django.urls import path
 
 from .views import (
-    CompareFieldsView,
-    DownloadDataView,
-    GetColumnOptionsView,
-    PreviewDatasetView,
+    compare_fields,
+    download_data_view,
+    get_column_options,
+    preview_dataset,
 )
 
 urlpatterns = [
-    path("download_data/", DownloadDataView.as_view(), name="download_data"),
+    path("download_data/", download_data_view, name="download_data"),
+    path("preview_dataset/<str:filename>", preview_dataset, name="preview_dataset"),
+    path("compare_fields/<str:filename>", compare_fields, name="compare_fields"),
     path(
-        "preview_dataset/<str:filename>/",
-        PreviewDatasetView.as_view(),
-        name="preview_dataset",
-    ),
-    path(
-        "compare_fields/<str:filename>/",
-        CompareFieldsView.as_view(),
-        name="compare_fields",
-    ),
-    path(
-        "get_column_options/<str:filename>/",
-        GetColumnOptionsView.as_view(),
+        "get_column_options/<str:filename>",
+        get_column_options,
         name="get_column_options",
     ),
 ]

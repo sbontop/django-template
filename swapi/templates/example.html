@@ -1,37 +1,17 @@
 {% block content %}
 <form id="column-form">
-    <div id="column-options"></div>
+    <input type="checkbox" id="homeworld" name="column" value="homeworld">Homeworld
+    <input type="checkbox" id="birth_year" name="column" value="birth_year">Birth Year
     <button type="submit">Submit</button>
 </form>
 
 <div id="table-container"></div>
 
 {% endblock %}
-
 {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Retrieve options from server using AJAX
-        $.ajax({
-            url: '{% url "get_column_options" filename=filename %}',
-            type: 'GET',
-            success: function (data) {
-                // Populate form inputs
-                var optionsDiv = $('#column-options');
-                data['columns'].forEach(function (column) {
-                    var label = $('<label>').text(column);
-                    var checkbox = $('<input>').attr({
-                        type: 'checkbox',
-                        name: 'column',
-                        value: column,
-                    });
-                    label.prepend(checkbox);
-                    optionsDiv.append(label);
-                });
-            }
-        });
-
         // Handle form submission
         $('#column-form').submit(function (event) {
             event.preventDefault();

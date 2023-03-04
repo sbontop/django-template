@@ -117,7 +117,9 @@ def compare_fields(request, *args, **kwargs):
         rows = list(reader)
 
     if request.method != "POST":
-        return render(request, "example.html", {"rows": rows, "filename": filename})
+        return render(
+            request, "compare_fields.html", {"rows": rows, "filename": filename}
+        )
 
     selected_columns = request.POST.get("selected_columns")
     selected_columns = selected_columns.split(",") if selected_columns else []
@@ -145,3 +147,13 @@ def compare_fields(request, *args, **kwargs):
     table_rows = sorted(table_rows, key=lambda row: row["count"], reverse=True)
 
     return JsonResponse({"rows": table_rows, "filename": filename})
+
+
+def get_column_options(request, *args, **kwargs):
+    # Load CSV data
+    filename = kwargs.get("filename")
+    file_path = f"swapi/{filename}"
+    with default_storage.open(file_path, "r") as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+    return JsonResponse({"columns": list(rows[0].keys())})
